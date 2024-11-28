@@ -1,18 +1,14 @@
-## О проекте
-[Видео о луковой архитектуре](https://www.youtube.com/watch?v=8Im74b55vFc)  
-[Видео о паттерне Unit of work](https://www.youtube.com/watch?v=TaYg23VkCRI)
 
-
-### Запуск приложения
-1. Создать виртуальное окружение и установить зависимости
-2. Вызвать в терминале `python3 src/main.py`
+### Running the Application
+1. Create a virtual environment and install dependencies.
+2. In the terminal, run `python3 src/main.py`
 
 ### Настройка Alembic для асинхронного драйвера
-1. Находясь в корневой директории, запустить  
+1. While in the root directory, run
 `alembic init -t async migrations`
-2. Перенести папку `migrations` внутрь папки `src`.
-3. Заменить `prepend_sys_path` на `. src` и `script_location` на `src/migrations` внутри `alembic.ini`
+2. Move the `migrations` folder into the `src` folder.
+3. Replace `prepend_sys_path` with `. src` and `script_location` with `src/migrations` inside `alembic.ini`
 
 
-### Документация к API
+### API Documentation
 ![Alt text](docs/github/openapi.png)
