@@ -11,4 +11,3 @@
 
 
 ### API Documentation
-![Alt text](docs/github/openapi.png)
