@@ -1,6 +1,5 @@
-from models.users import Users
-from utils.repository import SQLAlchemyRepository
+from utils.repository import MongoMotorRepository
 
 
-class UsersRepository(SQLAlchemyRepository):
-    model = Users
+class UserRepository(MongoMotorRepository):
+    collection_name = 'users'

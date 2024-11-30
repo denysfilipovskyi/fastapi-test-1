@@ -1,14 +1,7 @@
-from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
-from sqlalchemy.orm import DeclarativeBase
+import os
 
-engine = create_async_engine("sqlite+aiosqlite:///sqlite.db")
-async_session_maker = async_sessionmaker(engine, expire_on_commit=False)
+from motor.motor_asyncio import AsyncIOMotorClient
 
-
-class Base(DeclarativeBase):
-    pass
-
-
-async def get_async_session():
-    async with async_session_maker() as session:
-        yield session
+MONGO_URL = os.getenv("MONGO_URL", "mongodb://localhost:27017")
+client = AsyncIOMotorClient(MONGO_URL)
+users_crm = client['users_crm']

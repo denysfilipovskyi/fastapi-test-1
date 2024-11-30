@@ -1,33 +1,32 @@
 from abc import ABC, abstractmethod
 
-from sqlalchemy import insert, select
-
-from db.db import async_session_maker
+from db.db import users_crm
 
 
 class AbstractRepository(ABC):
     @abstractmethod
     async def add_one():
         raise NotImplementedError
-    
+
     @abstractmethod
     async def find_all():
         raise NotImplementedError
 
 
-class SQLAlchemyRepository(AbstractRepository):
-    model = None
+class MongoMotorRepository(AbstractRepository):
+    collection_name = None
 
-    async def add_one(self, data: dict) -> int:
-        async with async_session_maker() as session:
-            stmt = insert(self.model).values(**data).returning(self.model.id)
-            res = await session.execute(stmt)
-            await session.commit()
-            return res.scalar_one()
-    
-    async def find_all(self):
-        async with async_session_maker() as session:
-            stmt = select(self.model)
-            res = await session.execute(stmt)
-            res = [row[0].to_read_model() for row in res.all()]
-            return res
+    async def add_one(self, data: dict):
+        collection = users_crm.get_collection(self.collection_name)
+        new_row = await collection.insert_one(data)
+        return new_row.inserted_id
+
+    async def find_all(self) -> list:
+        collection = users_crm.get_collection(self.collection_name)
+        data = await collection.find().to_list(1000)
+        return data
+
+    async def delete_all(self) -> int:
+        collection = users_crm.get_collection(self.collection_name)
+        result = await collection.delete_many({})
+        return result.deleted_count

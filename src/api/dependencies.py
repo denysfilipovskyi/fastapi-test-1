@@ -1,12 +1,6 @@
-from repositories.tasks import TasksRepository
-from repositories.users import UsersRepository
-from services.tasks import TasksService
+from repositories.users import UserRepository
 from services.users import UsersService
 
 
-def tasks_service():
-    return TasksService(TasksRepository)
-
-
 def users_service():
-    return UsersService(UsersRepository)
+    return UsersService(UserRepository)
