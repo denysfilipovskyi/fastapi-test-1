@@ -1,4 +1,3 @@
-# import uvicorn
 from fastapi import FastAPI
 from src.api.routers import all_routers
 
