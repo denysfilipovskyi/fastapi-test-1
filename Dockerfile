@@ -8,7 +8,7 @@ RUN curl -sSL https://install.python-poetry.org | python3 -
 
 # Додаємо Poetry в PATH
 ENV PATH="/root/.local/bin:$PATH"
-ENV PYTHONPATH=/app/src
+ENV PYTHONPATH=/app/users_crm
 # Перевіряємо, що Poetry встановлений
 RUN poetry --version
 
@@ -28,4 +28,4 @@ COPY . /app
 EXPOSE 8000
 
 # Команда для запуску FastAPI з uvicorn
-CMD ["poetry", "run", "uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+CMD ["poetry", "run", "uvicorn", "users_crm.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]

@@ -10,7 +10,7 @@ services:
       - mongodb
     environment:
       - MONGO_URL=mongodb://mongodb:27017
-    command: poetry run uvicorn src.main:app --host 0.0.0.0 --port 8000 --reload 
+    command: poetry run uvicorn users_crm.main:app --host 0.0.0.0 --port 8000 --reload 
 
   mongodb:
     image: mongo:6.0

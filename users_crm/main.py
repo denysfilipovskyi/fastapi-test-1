@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from src.api.routers import all_routers
+from users_crm.api.routers import all_routers
 
 app = FastAPI(
     title="Users crm"

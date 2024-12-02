@@ -24,7 +24,7 @@ Create a Pydantic user model with the following attributes:
 - is_active
 - created_at
 - last_login
-- hashed_pass
+- password
 
 ---
 
@@ -57,7 +57,7 @@ Develop a simple authentication middleware to handle user authentication and rol
 
 ### 5. Admin-Restricted Route
 
-Create a route accessible only to users with the admin role. This route should allow updating other users' attributes by their oid (ObjectId), excluding the hashed_pass field.
+Create a route accessible only to users with the admin role. This route should allow updating other users' attributes by their oid (ObjectId), excluding the password field.
 
 ---
 
