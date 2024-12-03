@@ -1,10 +1,13 @@
-from typing import Annotated, List
+from typing import Annotated
+
 from bson import ObjectId
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from repositories.users import UserRepository
-from services.users import UsersService
 from services.auth import AuthService
+from services.users import UsersService
+
+from users_crm.repositories.rabbit_mq import RabbitMQRepository
 from users_crm.schemas.users import UserSchemaUpdate
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl='auth/login')
@@ -15,7 +18,7 @@ def users_service():
 
 
 def auth_service():
-    return AuthService(UserRepository)
+    return AuthService(UserRepository, RabbitMQRepository)
 
 
 async def get_current_user(

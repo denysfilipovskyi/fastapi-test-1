@@ -1,13 +1,14 @@
 from fastapi import HTTPException, status
-from schemas.users import UserCollectionSchema, UserSchema, UserSchemaAdd, PyObjectId
-from users_crm.repositories.abstract import AbstractRepository
+from schemas.users import PyObjectId, UserCollectionSchema, UserSchema, UserSchemaUpdate
+
+from users_crm.repositories.abstract.nosql import AbstractNoSqlRepository
 
 
 class UsersService:
-    def __init__(self, users_repo: AbstractRepository):
-        self.users_repo: AbstractRepository = users_repo()
+    def __init__(self, users_repo: AbstractNoSqlRepository):
+        self.users_repo: AbstractNoSqlRepository = users_repo()
 
-    async def update_user_by_id(self, id: str, user: UserSchemaAdd) -> UserSchema:
+    async def update_user_by_id(self, id: str, user: UserSchemaUpdate) -> UserSchema:
         user_dict = user.model_dump(by_alias=True)
         data = await self.users_repo.update_one(
             id=PyObjectId(id),

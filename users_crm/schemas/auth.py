@@ -1,13 +1,4 @@
-from typing import Literal
 from pydantic import BaseModel, EmailStr, Field
-
-from users_crm.schemas.users import UserSchemaAdd
-
-
-class AuthSchema(UserSchemaAdd):
-    email: EmailStr = Field(..., example='john.doe@example.com')
-    role: Literal['admin', 'dev', 'simple mortal'] = Field(
-        default='simple mortal')
 
 
 class TokenSchema(BaseModel):

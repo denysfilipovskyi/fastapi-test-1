@@ -1,8 +1,9 @@
 from db.mongo_motor import users_crm
-from users_crm.repositories.abstract import AbstractRepository
+
+from users_crm.repositories.abstract.nosql import AbstractNoSqlRepository
 
 
-class MongoMotorRepository(AbstractRepository):
+class MongoMotorRepository(AbstractNoSqlRepository):
     collection_name = None
 
     async def add_one(self, data: dict):
@@ -21,10 +22,6 @@ class MongoMotorRepository(AbstractRepository):
     async def find_one(self, filters: dict):
         collection = users_crm.get_collection(self.collection_name)
         return await collection.find_one(filters)
-
-    async def find_all(self):
-        collection = users_crm.get_collection(self.collection_name)
-        return await collection.find().to_list(1000)
 
     async def find_by_filters(self, filters: dict):
         collection = users_crm.get_collection(self.collection_name)

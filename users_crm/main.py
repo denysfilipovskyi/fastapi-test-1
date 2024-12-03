@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+
 from users_crm.api.routers import all_routers
 
 app = FastAPI(
