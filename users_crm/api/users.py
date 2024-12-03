@@ -2,9 +2,9 @@ from typing import Annotated
 
 from bson import ObjectId
 
-from api.dependencies import get_current_user, users_service
+from api.dependencies import require_admin_role, users_service, validate_object_id
 from fastapi import APIRouter, Depends, HTTPException, status
-from schemas.users import UserSchema, UserSchemaAdd, UserSchemaUpdate
+from schemas.users import UserSchemaUpdate
 from services.users import UsersService
 
 router = APIRouter(
@@ -15,23 +15,12 @@ router = APIRouter(
 
 @router.patch('/{user_id}')
 async def update_user(
-    user_id: str,
     user: Annotated[UserSchemaUpdate, Depends()],
     users_service: Annotated[UsersService, Depends(users_service)],
-    current_user: Annotated[UserSchemaUpdate, Depends(get_current_user)]
+    _=Depends(require_admin_role),
+    validated_user_id: str = Depends(validate_object_id)
 ):
-    if current_user.role != 'admin':
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail='You are not authorized to perform this action'
-        )
-
-    if not ObjectId.is_valid(user_id):
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f'Invalid ObjectId: {user_id}'
-        )
-    return await users_service.update_user_by_id(id=user_id, user=user)
+    return await users_service.update_user_by_id(id=validated_user_id, user=user)
 
 
 @router.get('/{user_id}')
