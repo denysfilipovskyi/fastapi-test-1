@@ -6,7 +6,6 @@ from users_crm.schemas.users import UserSchemaAdd
 
 class AuthSchema(UserSchemaAdd):
     email: EmailStr = Field(..., example='john.doe@example.com')
-    password: str = Field(..., example='hashedpassword')
     role: Literal['admin', 'dev', 'simple mortal'] = Field(
         default='simple mortal')
 

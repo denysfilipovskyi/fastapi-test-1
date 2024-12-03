@@ -4,7 +4,7 @@ from datetime import datetime, timedelta, timezone
 from config import settings
 from fastapi import HTTPException, status
 from schemas.auth import AuthSchema, TokenSchema
-from jose import jwt
+from jose import JWTError, jwt
 
 from users_crm.repositories.abstract import AbstractRepository
 from users_crm.schemas.types import PyObjectId
@@ -42,9 +42,9 @@ class AuthService:
         access_token = self.create_access_token(data={'sub': user['email'], 'role': user['role']})
         user['last_login'] = datetime.now(timezone.utc)
         self.users_repo.update_one(id=user['_id'], data=user)
-        return TokenSchema(access_token=access_token, token_type="bearer")
+        return TokenSchema(access_token=access_token, token_type='bearer')
 
-    async def register_user(self, user: AuthSchema) -> UserSchema:
+    async def register_user(self, user: UserSchema) -> UserSchema:
         existing_user = await self.users_repo.find_by_filters({'email': user.email})
         if existing_user:
             raise HTTPException(
@@ -58,3 +58,22 @@ class AuthService:
         if not data:
             raise HTTPException(status_code=404, detail='User not found')
         return UserSchema(**data)
+
+    async def get_user_by_token(self, token: str) -> UserSchema:
+        try:
+            payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
+            email: str = payload.get('sub')
+            if not email:
+                raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Invalid token')
+
+            user = await self.users_repo.find_one({'email': email})
+            if not user:
+                raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='User not found')
+
+            await self.users_repo.update_one(
+                id=user['_id'],
+                data={'last_login': datetime.now(timezone.utc)}
+            )
+            return UserSchema(**user)
+        except JWTError:
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Invalid token')

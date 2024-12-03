@@ -7,17 +7,6 @@ class UsersService:
     def __init__(self, users_repo: AbstractRepository):
         self.users_repo: AbstractRepository = users_repo()
 
-    # async def add_user(self, user: UserSchemaAdd) -> str:
-    #     existing_user = await self.users_repo.find_by_filters({'email': user.email})
-    #     if existing_user:
-    #         raise HTTPException(
-    #             status_code=status.HTTP_400_BAD_REQUEST, detail='Email already registered')
-
-    #     user_dict = user.model_dump(by_alias=True, exclude=['id'])
-    #     user_dict['password'] = self.hash_password(user.password)
-    #     user_id = await self.users_repo.add_one(user_dict)
-    #     return UserSchema(**data)
-
     async def update_user_by_id(self, id: str, user: UserSchemaAdd) -> UserSchema:
         user_dict = user.model_dump(by_alias=True)
         data = await self.users_repo.update_one(
